@@ -77,11 +77,42 @@ drwxr-xr-x 5 root root   4096 May 30 01:59 ..
 -rw-r--r-- 1 root root 448937 May 30 02:01 shelley.txt
 ```
 
-8. We are using WordCount.jar which luckily is in the repo so we can curl it again
+8. We are using WordCount.jar. I had to copy into a directory outside of the container and then cp it backto the container.
 
 ```
-cd /app/jars
-curl https://github.com/wxw-matt/docker-hadoop/blob/master/jobs/jars/WordCount.jar -o WordCounter.jar
+   mkdir wxw
+   cd wxw
+   git clone https://github.com/wxw-matt/docker-hadoop.git
+   cd docker-hadoop/jobs/jars
+   docker cp WordCount.jar namenode:/app/jars/WordCount.jar
 ```
 
-9. After I curled the WordCounter.jar this is the step that I coundn't get past.
+9. Go back to the container and Load data in HDFS
+Hadoop can only read and write to the Hadoop Distributed File System.
+We need to move data from the Linux file system into the Hadoop file system. We use the "hdfs" commands.
+```
+cd /
+hdfs dfs -mkdir /test-1-input
+hdfs dfs -copyFromLocal -f /app/data/*.txt /test-1-input/
+```
+
+
+10. Run Hadoop/MapReduce
+
+```
+hadoop jar app/jars/WordCounter.jar WordCount /test-1-input /test-1-output
+
+```
+
+11. Copy the results out of hdfs
+
+```
+hdfs dfs -copyToLocal /test-1-output /app/res/
+```
+
+10. see the results
+
+```
+cat /app/res/test-1-output/part-r-00000
+```
+
