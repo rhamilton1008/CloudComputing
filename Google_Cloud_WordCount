@@ -1,1 +1,37 @@
+1. Git Hadoop Sandbox docker files
 
+```
+git clone https://github.com/hadoop-sandbox/hadoop-sandbox.git
+cd hadoop-sandbox
+```
+2. Bring up the Hadoop Cluster
+
+```
+docker compose up -d
+```
+the -d flag makes it so that we can't use the command prompt until everything is online
+
+we then call "docker ps" to make sure all of our images are healthy
+
+3. SSH into the cluster. The allows us to work as the "sandbox" user. the PW is sandbox
+
+```
+ssh -p 2222 sandbox@localhost
+```
+
+4. Verify "mapred" command by running the following
+
+```
+mapred streaming --help
+```
+
+5. Make book directory Curl in the same books as last time
+
+```
+mkdir books
+curl https://www.gutenberg.org/cache/epub/1342/pg1342.txt -o books/austen.txt
+curl https://www.gutenberg.org/cache/epub/84/pg84.txt -o books/shelley.txt
+curl https://www.gutenberg.org/cache/epub/768/pg768.txt -o books/bronte.txt
+```
+
+6. 
